@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../common/SafeIcon'
+import { useTheme } from '../contexts/ThemeContext'
 
 const { FiMapPin, FiPhone, FiMail, FiExternalLink, FiStar, FiFilter } = FiIcons
 
 const Manufacturers = () => {
+  const { isDark } = useTheme()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedState, setSelectedState] = useState('all')
 
@@ -147,14 +149,18 @@ const Manufacturers = () => {
 
     const remainingStars = 5 - Math.ceil(rating)
     for (let i = 0; i < remainingStars; i++) {
-      stars.push(<SafeIcon key={`empty-${i}`} icon={FiStar} className="text-gray-600" />)
+      stars.push(<SafeIcon key={`empty-${i}`} icon={FiStar} className={`transition-colors duration-300 ${
+        isDark ? 'text-gray-600' : 'text-gray-300'
+      }`} />)
     }
 
     return stars
   }
 
   return (
-    <div className="min-h-screen py-12 px-6">
+    <div className={`min-h-screen py-12 px-6 transition-colors duration-300 ${
+      isDark ? 'bg-gray-950' : 'bg-gray-50'
+    }`}>
       <div className="container mx-auto">
         <motion.div
           className="text-center mb-12"
@@ -162,31 +168,44 @@ const Manufacturers = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-4xl font-bold mb-4">Manufacturers Directory</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <h1 className={`text-4xl font-bold mb-4 transition-colors duration-300 ${
+            isDark ? 'text-white' : 'text-gray-900'
+          }`}>Manufacturers Directory</h1>
+          <p className={`text-xl max-w-2xl mx-auto transition-colors duration-300 ${
+            isDark ? 'text-gray-300' : 'text-gray-700'
+          }`}>
             Connect with leading mobile home manufacturers across the United States
           </p>
         </motion.div>
 
         {/* Filters */}
         <motion.div
-          className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700"
+          className={`rounded-lg p-6 mb-8 border transition-colors duration-300 ${
+            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          }`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
           <div className="flex items-center space-x-4 mb-4">
             <SafeIcon icon={FiFilter} className="text-orange-400 text-xl" />
-            <h2 className="text-lg font-semibold">Filter Manufacturers</h2>
+            <h2 className={`text-lg font-semibold transition-colors duration-300 ${
+              isDark ? 'text-white' : 'text-gray-900'
+            }`}>Filter Manufacturers</h2>
           </div>
-          
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Category</label>
+              <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${
+                isDark ? 'text-gray-300' : 'text-gray-700'
+              }`}>Category</label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:border-orange-500 focus:outline-none text-white"
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
+                  isDark 
+                    ? 'bg-gray-700 border-gray-600 focus:border-orange-500 text-white' 
+                    : 'bg-gray-50 border-gray-300 focus:border-orange-500 text-gray-900'
+                }`}
               >
                 {categories.map(category => (
                   <option key={category.id} value={category.id}>
@@ -195,13 +214,18 @@ const Manufacturers = () => {
                 ))}
               </select>
             </div>
-            
             <div>
-              <label className="block text-sm font-medium mb-2">State</label>
+              <label className={`block text-sm font-medium mb-2 transition-colors duration-300 ${
+                isDark ? 'text-gray-300' : 'text-gray-700'
+              }`}>State</label>
               <select
                 value={selectedState}
                 onChange={(e) => setSelectedState(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:border-orange-500 focus:outline-none text-white"
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
+                  isDark 
+                    ? 'bg-gray-700 border-gray-600 focus:border-orange-500 text-white' 
+                    : 'bg-gray-50 border-gray-300 focus:border-orange-500 text-gray-900'
+                }`}
               >
                 {states.map(state => (
                   <option key={state.id} value={state.id}>
@@ -218,7 +242,9 @@ const Manufacturers = () => {
           {filteredManufacturers.map((manufacturer, index) => (
             <motion.div
               key={manufacturer.id}
-              className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-orange-500 transition-colors"
+              className={`rounded-lg overflow-hidden border hover:border-orange-500 transition-all duration-300 ${
+                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              }`}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -231,10 +257,11 @@ const Manufacturers = () => {
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              
               <div className="p-6">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="text-xl font-semibold">{manufacturer.name}</h3>
+                  <h3 className={`text-xl font-semibold transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-gray-900'
+                  }`}>{manufacturer.name}</h3>
                   <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded-full">
                     {manufacturer.category.replace('_', ' ').toUpperCase()}
                   </span>
@@ -242,37 +269,51 @@ const Manufacturers = () => {
                 
                 <div className="flex items-center space-x-1 mb-3">
                   {renderStars(manufacturer.rating)}
-                  <span className="text-gray-400 text-sm ml-2">
+                  <span className={`text-sm ml-2 transition-colors duration-300 ${
+                    isDark ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
                     ({manufacturer.rating})
                   </span>
                 </div>
                 
-                <p className="text-gray-300 text-sm mb-4">
+                <p className={`text-sm mb-4 transition-colors duration-300 ${
+                  isDark ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   {manufacturer.description}
                 </p>
                 
                 <div className="space-y-2 mb-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                  <div className={`flex items-center space-x-2 text-sm transition-colors duration-300 ${
+                    isDark ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
                     <SafeIcon icon={FiMapPin} />
                     <span>{manufacturer.location}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                  <div className={`flex items-center space-x-2 text-sm transition-colors duration-300 ${
+                    isDark ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
                     <SafeIcon icon={FiPhone} />
                     <span>{manufacturer.phone}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                  <div className={`flex items-center space-x-2 text-sm transition-colors duration-300 ${
+                    isDark ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
                     <SafeIcon icon={FiMail} />
                     <span>{manufacturer.email}</span>
                   </div>
                 </div>
                 
                 <div className="mb-4">
-                  <h4 className="text-sm font-medium mb-2">Specialties:</h4>
+                  <h4 className={`text-sm font-medium mb-2 transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-gray-900'
+                  }`}>Specialties:</h4>
                   <div className="flex flex-wrap gap-1">
                     {manufacturer.specialties.map((specialty, idx) => (
                       <span
                         key={idx}
-                        className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded"
+                        className={`text-xs px-2 py-1 rounded transition-colors duration-300 ${
+                          isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                        }`}
                       >
                         {specialty}
                       </span>
@@ -280,7 +321,9 @@ const Manufacturers = () => {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
+                <div className={`flex items-center justify-between text-sm mb-4 transition-colors duration-300 ${
+                  isDark ? 'text-gray-400' : 'text-gray-600'
+                }`}>
                   <span>Est. {manufacturer.established}</span>
                   <span>{manufacturer.locations} Locations</span>
                 </div>
@@ -301,7 +344,9 @@ const Manufacturers = () => {
 
         {filteredManufacturers.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-400 text-lg">
+            <p className={`text-lg transition-colors duration-300 ${
+              isDark ? 'text-gray-400' : 'text-gray-600'
+            }`}>
               No manufacturers found matching your criteria.
             </p>
           </div>

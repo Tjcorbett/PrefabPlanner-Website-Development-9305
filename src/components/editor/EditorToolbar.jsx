@@ -2,8 +2,13 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import { useTheme } from '../../contexts/ThemeContext'
 
-const { FiMousePointer, FiSquare, FiCircle, FiEdit2, FiType, FiHome, FiZoomIn, FiZoomOut, FiRefreshCw, FiTrash2, FiSave, FiDownload, FiGrid, FiEye, FiLayers, FiMove, FiMinus, FiFolderOpen } = FiIcons
+const {
+  FiMousePointer, FiSquare, FiCircle, FiEdit2, FiType, FiHome, FiZoomIn,
+  FiZoomOut, FiRefreshCw, FiTrash2, FiSave, FiDownload, FiGrid, FiEye,
+  FiLayers, FiMove, FiMinus, FiFolderOpen
+} = FiIcons
 
 const EditorToolbar = ({
   selectedTool,
@@ -23,6 +28,8 @@ const EditorToolbar = ({
   onZoomOut,
   onZoomFit
 }) => {
+  const { isDark } = useTheme()
+
   const tools = [
     { id: 'select', icon: FiMousePointer, label: 'Select', color: 'bg-blue-600' },
     { id: 'wall', icon: FiMinus, label: 'Wall', color: 'bg-orange-600' },
@@ -36,7 +43,9 @@ const EditorToolbar = ({
 
   return (
     <motion.div
-      className="bg-gray-900 border-b border-gray-700 p-4"
+      className={`border-b p-4 transition-colors duration-300 ${
+        isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'
+      }`}
       initial={{ y: -60 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
@@ -44,7 +53,9 @@ const EditorToolbar = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {/* Tools */}
-          <div className="flex items-center space-x-2 bg-gray-800 rounded-lg p-2">
+          <div className={`flex items-center space-x-2 rounded-lg p-2 transition-colors duration-300 ${
+            isDark ? 'bg-gray-800' : 'bg-gray-100'
+          }`}>
             {tools.map((tool) => (
               <button
                 key={tool.id}
@@ -52,7 +63,9 @@ const EditorToolbar = ({
                 className={`p-3 rounded-lg transition-all duration-200 transform hover:scale-105 ${
                   selectedTool === tool.id
                     ? `${tool.color} text-white shadow-lg`
-                    : 'text-gray-300 hover:text-white hover:bg-gray-700'
+                    : isDark
+                    ? 'text-gray-300 hover:text-white hover:bg-gray-700'
+                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'
                 }`}
                 title={tool.label}
               >
@@ -62,24 +75,38 @@ const EditorToolbar = ({
           </div>
 
           {/* Zoom Controls */}
-          <div className="flex items-center space-x-1 bg-gray-800 rounded-lg p-1">
+          <div className={`flex items-center space-x-1 rounded-lg p-1 transition-colors duration-300 ${
+            isDark ? 'bg-gray-800' : 'bg-gray-100'
+          }`}>
             <button
               onClick={onZoomOut}
-              className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+              className={`p-2 rounded-lg transition-colors ${
+                isDark 
+                  ? 'text-gray-300 hover:text-white hover:bg-gray-700' 
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'
+              }`}
               title="Zoom Out"
             >
               <SafeIcon icon={FiZoomOut} />
             </button>
             <button
               onClick={onZoomFit}
-              className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+              className={`p-2 rounded-lg transition-colors ${
+                isDark 
+                  ? 'text-gray-300 hover:text-white hover:bg-gray-700' 
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'
+              }`}
               title="Fit to Screen"
             >
               <SafeIcon icon={FiRefreshCw} />
             </button>
             <button
               onClick={onZoomIn}
-              className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+              className={`p-2 rounded-lg transition-colors ${
+                isDark 
+                  ? 'text-gray-300 hover:text-white hover:bg-gray-700' 
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'
+              }`}
               title="Zoom In"
             >
               <SafeIcon icon={FiZoomIn} />
@@ -94,7 +121,9 @@ const EditorToolbar = ({
             className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
               showTemplates
                 ? 'bg-orange-600 text-white'
-                : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                : isDark
+                ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
             }`}
           >
             <SafeIcon icon={FiLayers} />
@@ -106,7 +135,9 @@ const EditorToolbar = ({
             className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
               showFurniture
                 ? 'bg-orange-600 text-white'
-                : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                : isDark
+                ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
             }`}
           >
             <SafeIcon icon={FiEye} />
@@ -120,7 +151,9 @@ const EditorToolbar = ({
               className={`p-2 rounded-lg transition-colors ${
                 snapToGrid
                   ? 'bg-orange-600 text-white'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                  : isDark
+                  ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
               title="Snap to Grid"
             >
@@ -129,7 +162,11 @@ const EditorToolbar = ({
             <select
               value={gridSize}
               onChange={(e) => setGridSize(Number(e.target.value))}
-              className="bg-gray-800 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
+              className={`px-3 py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
+                isDark 
+                  ? 'bg-gray-800 text-white border-gray-600 focus:border-orange-500' 
+                  : 'bg-white text-gray-900 border-gray-300 focus:border-orange-500'
+              }`}
             >
               <option value={10}>10px</option>
               <option value={20}>20px</option>
@@ -147,7 +184,6 @@ const EditorToolbar = ({
               <SafeIcon icon={FiFolderOpen} />
               <span>Save/Load</span>
             </button>
-
             <button
               onClick={onClear}
               className="flex items-center space-x-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
@@ -155,7 +191,6 @@ const EditorToolbar = ({
               <SafeIcon icon={FiTrash2} />
               <span>Clear</span>
             </button>
-
             <button
               onClick={onExport}
               className="flex items-center space-x-2 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"

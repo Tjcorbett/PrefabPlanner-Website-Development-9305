@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { fabric } from 'fabric'
+import { useTheme } from '../contexts/ThemeContext'
 import EditorToolbar from '../components/editor/EditorToolbar'
 import Canvas2D from '../components/editor/Canvas2D'
 import FurnitureLibrary from '../components/editor/FurnitureLibrary'
@@ -8,6 +9,7 @@ import TemplateSelector from '../components/editor/TemplateSelector'
 import SaveLoadPanel from '../components/editor/SaveLoadPanel'
 
 const FloorplanEditor = () => {
+  const { isDark } = useTheme()
   const [selectedTool, setSelectedTool] = useState('select')
   const [showTemplates, setShowTemplates] = useState(false)
   const [showFurniture, setShowFurniture] = useState(true)
@@ -91,7 +93,9 @@ const FloorplanEditor = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className={`h-screen flex flex-col overflow-hidden transition-colors duration-300 ${
+      isDark ? 'bg-gray-950' : 'bg-gray-50'
+    }`}>
       <EditorToolbar
         selectedTool={selectedTool}
         setSelectedTool={setSelectedTool}
@@ -115,7 +119,9 @@ const FloorplanEditor = () => {
         {/* Side Panel */}
         {(showTemplates || showFurniture || showSaveLoad) && (
           <motion.div
-            className="w-80 bg-gray-900 border-r border-gray-700 flex flex-col"
+            className={`w-80 border-r flex flex-col transition-colors duration-300 ${
+              isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'
+            }`}
             initial={{ x: -320 }}
             animate={{ x: 0 }}
             transition={{ duration: 0.3 }}
@@ -128,11 +134,9 @@ const FloorplanEditor = () => {
                 }}
               />
             )}
-            
             {showFurniture && !showTemplates && !showSaveLoad && (
               <FurnitureLibrary onAddItem={handleAddFurnitureItem} />
             )}
-            
             {showSaveLoad && (
               <SaveLoadPanel
                 canvasData={getCurrentCanvasData()}
