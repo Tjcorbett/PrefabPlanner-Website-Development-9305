@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import { useAuth } from '../../contexts/AuthContext'
+import { useTheme } from '../../contexts/ThemeContext'
 
-const { FiX, FiUser, FiMail, FiLock } = FiIcons
+const { FiX, FiUser, FiMail, FiLock, FiShield } = FiIcons
 
 const LoginModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true)
@@ -14,6 +15,7 @@ const LoginModal = ({ isOpen, onClose }) => {
     name: ''
   })
   const { login } = useAuth()
+  const { isDark } = useTheme()
 
   const handleChange = (e) => {
     setFormData({
@@ -31,10 +33,26 @@ const LoginModal = ({ isOpen, onClose }) => {
       name: formData.name || formData.email.split('@')[0],
       email: formData.email,
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${formData.email}`,
-      provider: 'email'
+      provider: 'email',
+      role: 'user'
     }
     
     login(userData)
+    onClose()
+  }
+
+  const handleAdminLogin = () => {
+    // Admin login for testing
+    const adminData = {
+      id: 1,
+      name: 'Admin User',
+      email: 'admin@prefabplanner.com',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',
+      provider: 'admin',
+      role: 'admin'
+    }
+    
+    login(adminData)
     onClose()
   }
 
@@ -45,7 +63,8 @@ const LoginModal = ({ isOpen, onClose }) => {
       name: 'Google User',
       email: 'user@gmail.com',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=google',
-      provider: 'google'
+      provider: 'google',
+      role: 'user'
     }
     
     login(userData)
@@ -59,7 +78,8 @@ const LoginModal = ({ isOpen, onClose }) => {
       name: 'Facebook User',
       email: 'user@facebook.com',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=facebook',
-      provider: 'facebook'
+      provider: 'facebook',
+      role: 'user'
     }
     
     login(userData)
@@ -76,20 +96,39 @@ const LoginModal = ({ isOpen, onClose }) => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-gray-800 rounded-lg p-8 w-full max-w-md mx-4 border border-gray-700"
+            className={`rounded-lg p-8 w-full max-w-md mx-4 border transition-colors duration-300 ${
+              isDark 
+                ? 'bg-gray-800 border-gray-700' 
+                : 'bg-white border-gray-200'
+            }`}
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className={`text-2xl font-bold transition-colors duration-300 ${
+                isDark ? 'text-white' : 'text-gray-900'
+              }`}>
                 {isLogin ? 'Sign In' : 'Sign Up'}
               </h2>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
+                className={`transition-colors duration-300 ${
+                  isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                }`}
               >
                 <SafeIcon icon={FiX} className="text-xl" />
+              </button>
+            </div>
+
+            {/* Admin Login for Testing */}
+            <div className="mb-6">
+              <button
+                onClick={handleAdminLogin}
+                className="w-full flex items-center justify-center space-x-3 bg-red-600 text-white px-4 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium"
+              >
+                <SafeIcon icon={FiShield} className="text-lg" />
+                <span>Sign In as Admin (Testing)</span>
               </button>
             </div>
 
@@ -97,7 +136,11 @@ const LoginModal = ({ isOpen, onClose }) => {
             <div className="space-y-3 mb-6">
               <button
                 onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center space-x-3 bg-white text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors font-medium"
+                className={`w-full flex items-center justify-center space-x-3 px-4 py-3 rounded-lg transition-colors font-medium ${
+                  isDark 
+                    ? 'bg-white text-gray-800 hover:bg-gray-100' 
+                    : 'bg-white text-gray-800 hover:bg-gray-100 border border-gray-300'
+                }`}
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -120,16 +163,24 @@ const LoginModal = ({ isOpen, onClose }) => {
             </div>
 
             <div className="flex items-center mb-6">
-              <div className="flex-1 h-px bg-gray-600"></div>
-              <span className="px-3 text-gray-400 text-sm">or</span>
-              <div className="flex-1 h-px bg-gray-600"></div>
+              <div className={`flex-1 h-px transition-colors duration-300 ${
+                isDark ? 'bg-gray-600' : 'bg-gray-300'
+              }`}></div>
+              <span className={`px-3 text-sm transition-colors duration-300 ${
+                isDark ? 'text-gray-400' : 'text-gray-600'
+              }`}>or</span>
+              <div className={`flex-1 h-px transition-colors duration-300 ${
+                isDark ? 'bg-gray-600' : 'bg-gray-300'
+              }`}></div>
             </div>
 
             {/* Email Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
                 <div>
-                  <label className="flex items-center space-x-2 text-sm font-medium mb-2 text-gray-300">
+                  <label className={`flex items-center space-x-2 text-sm font-medium mb-2 transition-colors duration-300 ${
+                    isDark ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
                     <SafeIcon icon={FiUser} />
                     <span>Name</span>
                   </label>
@@ -139,14 +190,20 @@ const LoginModal = ({ isOpen, onClose }) => {
                     value={formData.name}
                     onChange={handleChange}
                     required={!isLogin}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:border-orange-500 focus:outline-none text-white"
+                    className={`w-full px-4 py-3 rounded-lg border focus:outline-none transition-colors duration-300 ${
+                      isDark 
+                        ? 'bg-gray-700 border-gray-600 focus:border-orange-500 text-white' 
+                        : 'bg-gray-50 border-gray-300 focus:border-orange-500 text-gray-900'
+                    }`}
                     placeholder="Your full name"
                   />
                 </div>
               )}
 
               <div>
-                <label className="flex items-center space-x-2 text-sm font-medium mb-2 text-gray-300">
+                <label className={`flex items-center space-x-2 text-sm font-medium mb-2 transition-colors duration-300 ${
+                  isDark ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   <SafeIcon icon={FiMail} />
                   <span>Email</span>
                 </label>
@@ -156,13 +213,19 @@ const LoginModal = ({ isOpen, onClose }) => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:border-orange-500 focus:outline-none text-white"
+                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none transition-colors duration-300 ${
+                    isDark 
+                      ? 'bg-gray-700 border-gray-600 focus:border-orange-500 text-white' 
+                      : 'bg-gray-50 border-gray-300 focus:border-orange-500 text-gray-900'
+                  }`}
                   placeholder="your@email.com"
                 />
               </div>
 
               <div>
-                <label className="flex items-center space-x-2 text-sm font-medium mb-2 text-gray-300">
+                <label className={`flex items-center space-x-2 text-sm font-medium mb-2 transition-colors duration-300 ${
+                  isDark ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   <SafeIcon icon={FiLock} />
                   <span>Password</span>
                 </label>
@@ -172,7 +235,11 @@ const LoginModal = ({ isOpen, onClose }) => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:border-orange-500 focus:outline-none text-white"
+                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none transition-colors duration-300 ${
+                    isDark 
+                      ? 'bg-gray-700 border-gray-600 focus:border-orange-500 text-white' 
+                      : 'bg-gray-50 border-gray-300 focus:border-orange-500 text-gray-900'
+                  }`}
                   placeholder="Your password"
                 />
               </div>
@@ -188,11 +255,12 @@ const LoginModal = ({ isOpen, onClose }) => {
             <div className="mt-6 text-center">
               <button
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-orange-400 hover:text-orange-300 text-sm"
+                className="text-orange-400 hover:text-orange-300 text-sm transition-colors duration-300"
               >
-                {isLogin
-                  ? "Don't have an account? Sign up"
-                  : "Already have an account? Sign in"}
+                {isLogin 
+                  ? "Don't have an account? Sign up" 
+                  : "Already have an account? Sign in"
+                }
               </button>
             </div>
           </motion.div>

@@ -1,7 +1,10 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useTheme } from '../contexts/ThemeContext'
 
 const Gallery = () => {
+  const { isDark } = useTheme()
+
   const projects = [
     {
       id: 1,
@@ -48,7 +51,9 @@ const Gallery = () => {
   ]
 
   return (
-    <div className="min-h-screen py-12 px-6">
+    <div className={`min-h-screen py-12 px-6 transition-colors duration-300 ${
+      isDark ? 'bg-gray-950 text-white' : 'bg-gray-50 text-gray-900'
+    }`}>
       <div className="container mx-auto">
         <motion.div
           className="text-center mb-12"
@@ -56,8 +61,12 @@ const Gallery = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-4xl font-bold mb-4">Design Gallery</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <h1 className={`text-4xl font-bold mb-4 transition-colors duration-300 ${
+            isDark ? 'text-white' : 'text-gray-900'
+          }`}>Design Gallery</h1>
+          <p className={`text-xl max-w-2xl mx-auto transition-colors duration-300 ${
+            isDark ? 'text-gray-300' : 'text-gray-700'
+          }`}>
             Explore our collection of beautiful mobile home designs created with PrefabPlanner
           </p>
         </motion.div>
@@ -66,7 +75,11 @@ const Gallery = () => {
           {projects.map((project, index) => (
             <motion.div
               key={project.id}
-              className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-orange-500 transition-colors"
+              className={`rounded-lg overflow-hidden border transition-all duration-300 hover:scale-105 ${
+                isDark 
+                  ? 'bg-gray-800 border-gray-700 hover:border-orange-500' 
+                  : 'bg-white border-gray-200 hover:border-orange-500'
+              }`}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -80,8 +93,12 @@ const Gallery = () => {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-gray-300 mb-3">{project.description}</p>
+                <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                  isDark ? 'text-white' : 'text-gray-900'
+                }`}>{project.title}</h3>
+                <p className={`mb-3 transition-colors duration-300 ${
+                  isDark ? 'text-gray-300' : 'text-gray-700'
+                }`}>{project.description}</p>
                 <div className="text-sm text-orange-400 font-medium">{project.specs}</div>
               </div>
             </motion.div>

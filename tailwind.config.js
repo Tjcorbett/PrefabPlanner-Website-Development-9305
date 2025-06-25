@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -31,6 +32,10 @@ export default {
           800: '#9a3412',
           900: '#7c2d12',
         }
+      },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       }
     },
   },
